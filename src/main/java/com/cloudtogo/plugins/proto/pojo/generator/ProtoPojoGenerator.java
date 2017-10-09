@@ -17,9 +17,12 @@ public class ProtoPojoGenerator {
 
     /**
      * enum element
-     * @param enumElement
-     * @param pkg
-     * @return
+     *
+     * @param enumElement EnumElement instance
+     *
+     * @param pkg package name
+     *
+     * @return ProtobufIDLProxy.CodeDependent
      */
     public static ProtobufIDLProxy.CodeDependent createCodeByType(EnumElement enumElement, String pkg) {
         return ProtobufIDLProxy.createCodeByType(enumElement, true, pkg);
@@ -27,9 +30,12 @@ public class ProtoPojoGenerator {
 
     /**
      * message element
-     * @param messageElement
-     * @param pkg
-     * @return
+     *
+     * @param messageElement MessageElement instance
+     *
+     * @param pkg package name
+     *
+     * @return ProtobufIDLProxy.CodeDependent
      */
     public static ProtobufIDLProxy.CodeDependent createCodeByType(MessageElement messageElement, String pkg){
         String simpleName = messageElement.name();
@@ -157,8 +163,10 @@ public class ProtoPojoGenerator {
 
     /**
      * generate source file
-     * @param cd
-     * @param sourceOutputDir
+     *
+     * @param cd ProtobufIDLProxy.CodeDependent instance
+     *
+     * @param sourceOutputDir java file directory
      */
     public static void writeSourceCode(ProtobufIDLProxy.CodeDependent cd, File sourceOutputDir) {
         ProtobufIDLProxy.writeSourceCode(cd, sourceOutputDir);

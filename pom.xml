@@ -148,6 +148,10 @@
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <encoding>UTF-8</encoding>
+                    <excludePackageNames>com.baidu.bjf.remoting.protobuf</excludePackageNames>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>

@@ -24,8 +24,8 @@ import java.util.List;
 
 /**
  * proto pojo generator
+ *
  * Created by cheney on 2017/10/6.
- * @phase process-sources
  */
 @Mojo(name = "generate",defaultPhase = LifecyclePhase.GENERATE_SOURCES)
 public class ProtoPojoGeneratorMojo extends AbstractMojo {
@@ -35,6 +35,7 @@ public class ProtoPojoGeneratorMojo extends AbstractMojo {
 
     /**
      * .proto file or directory and source package config
+     *
      * @parameter property="protoModules"
      */
     @Parameter(required = true)
@@ -102,12 +103,12 @@ public class ProtoPojoGeneratorMojo extends AbstractMojo {
         List<File> protoFileList;
         for (ProtoModule protoModule : this.protoModules) {
             protoFileList = new ArrayList<>();
-            if (protoModule.getSource().isDirectory()) {
-                Collection<File> protoFiles = FileUtils.listFiles(protoModule.getSource(), ioFileFilter, TrueFileFilter.INSTANCE);
+            if (protoModule.getProto().isDirectory()) {
+                Collection<File> protoFiles = FileUtils.listFiles(protoModule.getProto(), ioFileFilter, TrueFileFilter.INSTANCE);
                 protoFileList.addAll(protoFiles);
             } else {
-                if (protoModule.getSource().getName().endsWith(extension)) {
-                    protoFileList.add(protoModule.getSource());
+                if (protoModule.getProto().getName().endsWith(extension)) {
+                    protoFileList.add(protoModule.getProto());
                 }
             }
             protoFileList.forEach(file -> {

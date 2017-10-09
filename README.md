@@ -12,7 +12,7 @@ generate pojo with .proto file
     <configuration>
         <protoModules>
             <protoModule>
-                <source>src/test/resources/protobuf/monitor.proto</source>
+                <proto>src/test/resources/protobuf/monitor.proto</proto>
                 <pkg>com.cloudtogo.proto.pojo.monitor</pkg>
             </protoModule>
         </protoModules>
@@ -20,5 +20,5 @@ generate pojo with .proto file
 </plugin>
 ```
 
-- source: `.proto` file or directory
+- proto: `.proto` file or directory
 - pkg: source code package

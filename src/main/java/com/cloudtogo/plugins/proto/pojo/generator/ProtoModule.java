@@ -8,16 +8,16 @@ import java.io.Serializable;
  */
 public class ProtoModule implements Serializable {
 
-    private File source;
+    private File proto;
 
     private String pkg;
 
-    public File getSource() {
-        return source;
+    public File getProto() {
+        return proto;
     }
 
-    public void setSource(File source) {
-        this.source = source;
+    public void setProto(File proto) {
+        this.proto = proto;
     }
 
     public String getPkg() {
