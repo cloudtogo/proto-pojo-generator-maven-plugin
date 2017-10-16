@@ -13,6 +13,7 @@
     <groupId>com.cloudtogo.plugins</groupId>
     <artifactId>proto-pojo-generator-maven-plugin</artifactId>
     <version>1.0.0</version>
+    <packaging>maven-plugin</packaging>
 
     <name>proto-pojo-generator-maven-plugin</name>
     <description>Protobuf pojo generator</description>
@@ -91,7 +92,7 @@
         <url>https://github.com/cloudtogo/proto-pojo-generator-maven-plugin/issues</url>
     </issueManagement>
 
-    <distributionManagement>
+<!--    <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
             <name>Snapshot</name>
@@ -101,6 +102,19 @@
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+    </distributionManagement>-->
+
+    <distributionManagement>
+        <repository>
+            <id>nexus3</id>
+            <name>Releases</name>
+            <url>http://nexus3.c.cloudtogo.cn/repository/maven-releases/</url>
+        </repository>
+        <snapshotRepository>
+            <id>nexus3</id>
+            <name>Snapshot</name>
+            <url>http://nexus3.c.cloudtogo.cn/repository/maven-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <build>
