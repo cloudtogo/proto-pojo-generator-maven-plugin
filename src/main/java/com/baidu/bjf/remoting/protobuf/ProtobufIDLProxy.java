@@ -674,6 +674,7 @@ public class ProtobufIDLProxy {
         code.append(CodeDependent.NewLine);
         code.append(CodeDependent.NewLine);
 
+        // value
         code.append(CodeDependent.Indent).append("public int value() {");
         code.append(CodeDependent.NewLine);
         code.append(CodeDependent.Indent).append(CodeDependent.Indent).append("return value;");
@@ -681,6 +682,34 @@ public class ProtobufIDLProxy {
         code.append(CodeDependent.Indent).append("}");
         code.append(CodeDependent.NewLine);
         code.append(CodeDependent.NewLine);
+
+        // valueOf
+        code.append(CodeDependent.Indent).append("public static " + simpleName + " valueOf(int value) {");
+        code.append(CodeDependent.NewLine);
+        code.append(CodeDependent.Indent).append(CodeDependent.Indent).append("switch (value) {");
+        code.append(CodeDependent.NewLine);
+        iter = type.constants().iterator();
+        while (iter.hasNext()) {
+            EnumConstantElement value = iter.next();
+            String name = value.name();
+            int tag = value.tag();
+            code.append(CodeDependent.Indent)
+                    .append(CodeDependent.Indent)
+                    .append(CodeDependent.Indent)
+                    .append("case " + tag + ": return " + name + ";")
+                    .append(CodeDependent.NewLine);
+        }
+        code.append(CodeDependent.Indent)
+                .append(CodeDependent.Indent)
+                .append(CodeDependent.Indent)
+                .append("default: return null;")
+                .append(CodeDependent.NewLine);
+        code.append(CodeDependent.Indent).append(CodeDependent.Indent).append("}");
+        code.append(CodeDependent.NewLine);
+        code.append(CodeDependent.Indent).append("}");
+        code.append(CodeDependent.NewLine);
+        code.append(CodeDependent.NewLine);
+
         code.append("}");
         code.append(CodeDependent.NewLine);
 
@@ -1009,7 +1038,7 @@ public class ProtobufIDLProxy {
     public static class CodeDependent {
 
         public static final String Indent = "    ";
-        public static final String NewLine = "\n";
+        public static final String NewLine = System.getProperty("line.separator");
 
         private String name;
         private String pkg;

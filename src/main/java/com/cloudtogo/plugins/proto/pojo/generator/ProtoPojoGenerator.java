@@ -156,7 +156,6 @@ public class ProtoPojoGenerator {
             getSetCode.append(ProtobufIDLProxy.CodeDependent.NewLine);
         }
         code.append(fieldCode);
-        code.append(ProtobufIDLProxy.CodeDependent.NewLine);
         code.append(getSetCode);
         return code;
     }
