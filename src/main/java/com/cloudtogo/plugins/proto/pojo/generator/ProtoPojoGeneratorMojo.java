@@ -1,11 +1,6 @@
 package com.cloudtogo.plugins.proto.pojo.generator;
 
-import com.baidu.bjf.remoting.protobuf.ProtobufIDLProxy;
-import com.baidu.jprotobuf.com.squareup.protoparser.*;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -15,12 +10,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
 
 /**
  * proto pojo generator
@@ -55,23 +44,23 @@ public class ProtoPojoGeneratorMojo extends AbstractMojo {
     public void execute() throws MojoExecutionException, MojoFailureException {
         this.checkConfig();
 
-        this.clearSourceDirectory();
-
-        this.generateSourceCode();
+//        this.clearSourceDirectory();
+//
+//        this.generateSourceCode();
     }
 
     private void checkConfig() throws MojoExecutionException {
         if (null == this.protoModules || this.protoModules.length == 0) {
             throw new MojoExecutionException("No proto module config.");
         }
-        for (ProtoModule protoModule : this.protoModules) {
+        /*for (ProtoModule protoModule : this.protoModules) {
             if (StringUtils.isBlank(protoModule.getPkg())) {
                 throw new MojoExecutionException("pkg config is null.");
             }
-        }
+        }*/
     }
 
-    private void clearSourceDirectory() {
+    /*private void clearSourceDirectory() {
         getLog().info("");
         getLog().info("clear source directory:");
         List<String> sourceDirectoryList = new ArrayList<>();
@@ -139,7 +128,7 @@ public class ProtoPojoGeneratorMojo extends AbstractMojo {
             });
         }
     }
-
+*/
     private IOFileFilter getFileFilter() {
         return new IOFileFilter() {
             @Override

@@ -11,7 +11,9 @@ public class ProtoModule implements Serializable {
 
     private File proto;
 
-    private String pkg;
+    private String model;
+
+    private String builder;
 
     List<SerializeAndDeserialize> fields;
 
@@ -23,12 +25,20 @@ public class ProtoModule implements Serializable {
         this.proto = proto;
     }
 
-    public String getPkg() {
-        return pkg;
+    public String getModel() {
+        return model;
     }
 
-    public void setPkg(String pkg) {
-        this.pkg = pkg;
+    public void setModel(String model) {
+        this.model = model;
+    }
+
+    public String getBuilder() {
+        return builder;
+    }
+
+    public void setBuilder(String builder) {
+        this.builder = builder;
     }
 
     public List<SerializeAndDeserialize> getFields() {
