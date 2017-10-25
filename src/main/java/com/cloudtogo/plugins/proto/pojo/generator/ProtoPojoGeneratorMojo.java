@@ -126,7 +126,7 @@ public class ProtoPojoGeneratorMojo extends AbstractMojo {
                             getLog().info(indent + indent + "generate java file: " + typeElement.name() + ".java");
                             ProtobufIDLProxy.CodeDependent codeDependent;
                             if (typeElement instanceof MessageElement) {
-                                codeDependent = ProtoPojoGenerator.createCodeByType((MessageElement) typeElement, protoModule.getPkg());
+                                codeDependent = ProtoPojoGenerator.createCodeByType((MessageElement) typeElement, protoModule.getPkg(), protoModule.getFields());
                             } else {
                                 codeDependent = ProtoPojoGenerator.createCodeByType((EnumElement) typeElement, protoModule.getPkg());
                             }

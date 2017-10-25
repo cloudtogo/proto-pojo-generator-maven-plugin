@@ -1,0 +1,63 @@
+syntax = "proto3";
+package monitor;
+
+service MonitorService {
+    rpc GetUptime(UptimeRequest) returns (UptimeResponse);
+    rpc WatchHost(WatchHostRequest) returns (stream WatchHostResponse);
+}
+
+enum EnumRPCStatus {
+    INVALID = 0;
+    STATUS_OK = 1;
+    STATUS_FAIL = 2;
+}
+
+message UptimeRequest {
+    string datacenter = 1;
+    string host = 2;
+}
+
+message UptimeResponse {
+    EnumRPCStatus status = 1;
+    int64 upseconds = 2; // in second
+}
+
+message WatchHostRequest {
+    string datacenter = 1;
+    string host = 2;
+}
+
+message WatchHostResponse {
+    EnumRPCStatus status = 1;
+    string description = 2;
+    Cpu cpu = 3;
+    Memory memory = 4;
+    Network network = 5;
+    Diskio diskio = 6;
+    Disk disk = 7;
+}
+
+message Cpu {
+    double kernel = 1; // e.g. 8.142493639472047
+    double user = 2; // e.g. 6.870229008628533
+}
+
+message Memory {
+    int64 total = 1; // Bytes, e.g. 16809566208
+    int64 used = 2; // Bytes, e.g. 4386037760
+}
+
+message Network {
+    int64 recv = 1; // Bytes/s, e.g. 1611671
+    int64 send = 2; // Bytes/s, e.g. 219290
+}
+
+message Diskio {
+    int64 read = 1; // Bytes/s, e.g. 7051662
+    int64 write = 2; // Bytes/s, e.g. 1571086
+}
+
+message Disk {
+    int64 total = 1; // Bytes, e.g. 37911855104
+    int64 used = 2; // Bytes, e.g. 4047396864
+}

@@ -35,9 +35,11 @@ public class ProtoPojoGenerator {
      *
      * @param pkg package name
      *
+     * @param serializeAndDeserializeFields need to serialize or deserialize field collection
+     *
      * @return ProtobufIDLProxy.CodeDependent
      */
-    public static ProtobufIDLProxy.CodeDependent createCodeByType(MessageElement messageElement, String pkg){
+    public static ProtobufIDLProxy.CodeDependent createCodeByType(MessageElement messageElement, String pkg, List<SerializeAndDeserialize> serializeAndDeserializeFields){
         String simpleName = messageElement.name();
         StringBuilder code = new StringBuilder();
         code.append("package ").append(pkg).append(ProtobufIDLProxy.CODE_END);
@@ -47,7 +49,7 @@ public class ProtoPojoGenerator {
         code.append(ProtobufIDLProxy.CodeDependent.NewLine);
         code.append(ProtobufIDLProxy.CodeDependent.NewLine);
 
-        code = createFiedlsCode(code, messageElement);
+        code = createFiedlsCode(code, messageElement, serializeAndDeserializeFields);
         code.append("}");
         code.append(ProtobufIDLProxy.CodeDependent.NewLine);
 
@@ -58,7 +60,7 @@ public class ProtoPojoGenerator {
         return cd;
     }
 
-    private static StringBuilder createFiedlsCode(StringBuilder code, MessageElement messageElement){
+    private static StringBuilder createFiedlsCode(StringBuilder code, MessageElement messageElement, List<SerializeAndDeserialize> serializeAndDeserializeFields) {
         StringBuilder fieldCode = new StringBuilder();
         StringBuilder getSetCode = new StringBuilder();
 
@@ -109,6 +111,23 @@ public class ProtoPojoGenerator {
             }
 
             // define field
+            if (null != serializeAndDeserializeFields) {
+                for (SerializeAndDeserialize serializeAndDeserialize : serializeAndDeserializeFields) {
+                    if (messageElement.name().equals(serializeAndDeserialize.getMessage())
+                            && field.name().equalsIgnoreCase(serializeAndDeserialize.getField())) {
+                        if (StringUtils.isNotBlank(serializeAndDeserialize.getSerialize())) {
+                            fieldCode.append(ProtobufIDLProxy.CodeDependent.Indent)
+                                    .append(String.format("@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = %s.class)", serializeAndDeserialize.getSerialize()))
+                                    .append(ProtobufIDLProxy.CodeDependent.NewLine);
+                        }
+                        if (StringUtils.isNotBlank(serializeAndDeserialize.getDeserialize())) {
+                            fieldCode.append(ProtobufIDLProxy.CodeDependent.Indent)
+                                    .append(String.format("@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = %s.class)", serializeAndDeserialize.getDeserialize()))
+                                    .append(ProtobufIDLProxy.CodeDependent.NewLine);
+                        }
+                    }
+                }
+            }
             fieldCode.append(ProtobufIDLProxy.CodeDependent.Indent);
             fieldCode.append("private ").append(javaType);
             fieldCode.append(" ").append(field.name());
