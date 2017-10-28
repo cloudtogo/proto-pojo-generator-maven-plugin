@@ -80,17 +80,8 @@ public final class ProtoParser {
 
     ProtoParser(String filePath, char[] data) {
         this.filePath = filePath;
-        this.data = this.cleanStream(data);
+        this.data = data;
         this.fileBuilder = ProtoFile.builder(filePath);
-    }
-
-    private char[] cleanStream(char[] data){
-        if(null == data || data.length == 0){
-            return data;
-        }
-        String temp = new String(data);
-        temp = temp.replaceAll("stream", "");
-        return temp.toCharArray();
     }
 
     ProtoFile readProtoFile() {
