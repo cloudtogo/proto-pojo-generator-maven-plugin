@@ -1,6 +1,8 @@
 # proto-pojo-generator-maven-plugin
 
-generate pojo with .proto file
+Pojo and builder code generator.
+
+It will generate pojo and builder code with `.proto` files. It dependencies on [`com.baidu:jprotobuf`](https://github.com/jhunters/jprotobuf).
 
 ## usage
 
@@ -9,76 +11,130 @@ generate pojo with .proto file
     <groupId>com.cloudtogo.plugins</groupId>
     <artifactId>proto-pojo-generator-maven-plugin</artifactId>
     <version>1.0.0</version>
-    <configuration>
-        <protoModules>
-            <protoModule>
-                <proto>src/test/resources/protobuf/monitor.proto</proto>
-                <pkg>com.cloudtogo.proto.pojo.monitor</pkg>
-            </protoModule>
-        </protoModules>
-    </configuration>
 </plugin>
 ```
 
-```
-<plugin>
-    <groupId>com.cloudtogo.plugins</groupId>
-    <artifactId>proto-pojo-generator-maven-plugin</artifactId>
-    <version>1.0.0</version>
-    <configuration>
-        <protoModules>
-            <protoModule>
-                <proto>src/test/resources/protobuf/cluster_meta.proto</proto>
-                <pkg>com.cloudtogo.business.orca.model.meta</pkg>
-                <fields>
-                    <field>
-                        <message>Container</message>
-                        <field>TerminalKey</field>
-                        <serialize>com.cloudtogo.business.core.serializer.Base64JsonSerializer</serialize>
-                        <deserialize>com.cloudtogo.business.core.deserializer.Base64JsonDeserializer</deserialize>
-                    </field>
-                </fields>
-            </protoModule>
-            <protoModule>
-                <proto>src/test/resources/protobuf/deploy_svc.proto</proto>
-                <pkg>com.cloudtogo.business.orca.model.deploy</pkg>
-            </protoModule>
-        </protoModules>
-    </configuration>
-</plugin>
-```
-
-target:
+This plugin will find `src/resources/proto-pojo.xml`, and also you can config your special file like below.
 
 ```
-<plugin>
-    <groupId>com.cloudtogo.plugins</groupId>
-    <artifactId>proto-pojo-generator-maven-plugin</artifactId>
-    <version>1.0.0</version>
-    <configuration>
-        <protoModules>
-            <protoModule>
-                <proto>src/test/resources/protobuf/cluster_meta.proto</proto>
-                <model>com.cloudtogo.business.orca.proto.meta.model</model>
-                <builder>com.cloudtogo.business.orca.proto.meta.builder</builder>
-                <fields>
-                    <field>
-                        <message>Container</message>
-                        <field>TerminalKey</field>
-                        <serialize>com.cloudtogo.business.core.serializer.Base64JsonSerializer</serialize>
-                        <deserialize>com.cloudtogo.business.core.deserializer.Base64JsonDeserializer</deserialize>
-                    </field>
-                </fields>
-            </protoModule>
-            <protoModule>
-                <proto>src/test/resources/protobuf/deploy_svc.proto</proto>
-                <model>com.cloudtogo.business.orca.proto.deploy.model</model>
-                <builder>com.cloudtogo.business.orca.proto.meta.builder</builder>
-            </protoModule>
-        </protoModules>
-    </configuration>
-</plugin>
+<configuration>
+    <config>src/test/resources/proto-pojo-config.xml</config>
+</configuration>
 ```
 
-- proto: `.proto` file or directory
-- pkg: source code package
+`proto-pojo.xml` example:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <protos>
+        <proto>
+            <file>src/test/resources/protobuf/helloworld.proto</file>
+            <pojo-pkg>com.cloudtogo.helloword.model</pojo-pkg>
+        </proto>
+    </protos>
+</config>
+```
+
+`helloworld.proto` example:
+
+```
+syntax = "proto3";
+package hellword;
+
+service MonitorService {
+    rpc Hello (Request) returns (Response);
+}
+
+message Request {
+    string name = 1;
+    bytes content = 2;
+}
+
+message Response {
+    bytes reply = 1;
+}
+```
+
+### builder
+
+Usually we have to convert the pojo class to a proto builder, and it's very simple with this plugin.
+
+```
+<proto>
+    <file>src/test/resources/protobuf/helloworld.proto</file>
+    <pojo-pkg>com.cloudtogo.helloword.model</pojo-pkg>
+    <builder-pkg>com.cloudtogo.helloword.builder</builder-pkg>
+</proto>
+```
+
+Then `RequestBuilder` class and `ResponseBuilder` class will be generated.
+
+### Serialize && Deserialize
+
+example:
+
+```
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+    <protos>
+        <proto>
+            <file>src/test/resources/protobuf/helloworld.proto</file>
+            <pojo-pkg>com.cloudtogo.helloword.model</pojo-pkg>
+            <builder-pkg>com.cloudtogo.helloword.builder</builder-pkg>
+            <fields>
+                <field>
+                    <message>Request</message>
+                    <field>content</field>
+                    <serialize>com.cloudtogo.serializer.Base64JsonSerializer</serialize>
+                    <deserialize>com.cloudtogo.deserializer.Base64JsonDeserializer</deserialize>
+                </field>
+                <field>
+                    <message>Response</message>
+                    <field>reply</field>
+                    <serialize>com.cloudtogo.serializer.Base64JsonSerializer</serialize>
+                    <deserialize>com.cloudtogo.deserializer.Base64JsonDeserializer</deserialize>
+                </field>
+            </fields>
+        </proto>
+    </protos>
+</config>
+```
+
+And the pojo class will like this.
+
+```
+@com.fasterxml.jackson.databind.annotation.JsonSerialize(using = com.cloudtogo.serializer.Base64JsonSerializer.class)
+@com.fasterxml.jackson.databind.annotation.JsonDeserialize(using = com.cloudtogo.deserializer.Base64JsonDeserializer.class)
+private byte[] content;
+```
+
+So you will notice that `Serialize && Deserialize` only support `jackson`.
+
+### alias
+
+It is too bad if a field name is a key word in java. And you have to rename the field.
+
+example:
+
+```
+<field>
+    <message>Request</message>
+    <field>name</field>
+    <alias>nickname</alias>
+</field>
+```
+
+And the pojo class will like this.
+
+```
+private String nickname;
+
+public String getName() {
+    return nickname;
+}
+
+public void setName(String nickname) {
+    this.nickname = nickname;
+}
+```

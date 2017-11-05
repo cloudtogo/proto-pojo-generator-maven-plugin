@@ -1,18 +1,17 @@
-package com.cloudtogo.plugins.proto.pojo.generator;
+package com.cloudtogo.plugins.proto.pojo.generator.config.model;
 
-import java.io.Serializable;
+import com.thoughtworks.xstream.annotations.XStreamAlias;
 
 /**
- * Created by cheney on 2017/10/24.
+ * Created by cheney on 2017/10/26.
  */
-public class SerializeAndDeserialize implements Serializable {
+@XStreamAlias("field")
+public class SpecialField {
 
     private String message;
-
     private String field;
-
+    private String alias;
     private String serialize;
-
     private String deserialize;
 
     public String getMessage() {
@@ -29,6 +28,14 @@ public class SerializeAndDeserialize implements Serializable {
 
     public void setField(String field) {
         this.field = field;
+    }
+
+    public String getAlias() {
+        return alias;
+    }
+
+    public void setAlias(String alias) {
+        this.alias = alias;
     }
 
     public String getSerialize() {
