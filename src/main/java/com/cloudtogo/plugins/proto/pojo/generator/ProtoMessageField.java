@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * if field type is proto message, then the dataType.kind == DataType.Kind.NAMED and the fieldType is null.
@@ -42,7 +44,7 @@ public class ProtoMessageField {
     }
 
     private void init() {
-        String name = this.fieldElement.name();
+        String name = this.getFieldName();
         String getSetPart = StringUtils.capitalize(name);
 
         if (fieldElement.label() == FieldElement.Label.REPEATED) {
@@ -132,13 +134,6 @@ public class ProtoMessageField {
             }
         }
         return null;
-    }
-
-    /**
-     * @return field name
-     */
-    public String name() {
-        return this.fieldElement.name();
     }
 
     public String getJavaType() {
@@ -429,8 +424,20 @@ public class ProtoMessageField {
         return dependencyType;
     }
 
+    /**
+     * 首字母小写的字段名
+     * @return
+     */
     private String getFieldName() {
-        return StringUtils.capitalize(this.name());
+        String name = this.fieldElement.name();
+        Pattern linePattern = Pattern.compile("_(\\w)");
+        Matcher matcher = linePattern.matcher(name);
+        StringBuffer sb = new StringBuffer();
+        while (matcher.find()) {
+            matcher.appendReplacement(sb, matcher.group(1).toUpperCase());
+        }
+        matcher.appendTail(sb);
+        return StringUtils.capitalize(sb.toString());
     }
 
     class DependencyType {
