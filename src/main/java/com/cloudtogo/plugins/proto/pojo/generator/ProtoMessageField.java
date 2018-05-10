@@ -72,6 +72,7 @@ public class ProtoMessageField {
             String typeName = fieldElement.type().toString();
             this.javaType = Constants.typeMapping.get(typeName).getJavaType();
         } else if (fieldElement.type().kind() == DataType.Kind.NAMED) {
+            // field type is proto message
             String str = fieldElement.type().toString();
             this.javaType = this.getNamedType(str);
         }
@@ -104,7 +105,7 @@ public class ProtoMessageField {
             return typeName;
         }
         if (typeName.indexOf(".") > 0) {
-            String pkg = typeName.substring(0, typeName.lastIndexOf("."));
+            String pkg = typeName.substring(0, typeName.lastIndexOf(".")); // 字段类型上定义的pkg，可能只是最后一部分内容
             typeName = typeName.substring(typeName.lastIndexOf(".") + 1);
             ProtoMessageMap protoMessageMap = this.getDependency(pkg, typeName);
             if (null != protoMessageMap) {
@@ -126,7 +127,7 @@ public class ProtoMessageField {
      */
     private ProtoMessageMap getDependency(String pkg, String messageName) {
         for (ProtoMessageMap protoMessageMap : this.protoMessageMapListPerhaps) {
-            if (pkg.equals(protoMessageMap.getPkg()) && messageName.equals(protoMessageMap.getName())) {
+            if(protoMessageMap.getPkg().endsWith(pkg) && messageName.equals(protoMessageMap.getName())){
                 return protoMessageMap;
             }
         }

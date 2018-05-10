@@ -36,8 +36,8 @@ public class ProtoPojoGenerator {
     private Log log;
 
     private List<ProtoMessageMap> protoMessageMapList = new ArrayList<>();
-    private List<ProtoMessageClass> protoMessageClassList = new ArrayList<>();
-    private List<ProtoEnumClass> protoEnumClassList = new ArrayList<>();
+    private List<ProtoMessageClass> protoMessageClassList = new ArrayList<>(); // message
+    private List<ProtoEnumClass> protoEnumClassList = new ArrayList<>(); // enum
 
     public ProtoPojoGenerator(String projectDir, File configFile) {
         XStream xStream = new XStream(new DomDriver());
